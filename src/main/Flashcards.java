@@ -22,6 +22,8 @@ public class Flashcards {
 	 * TODO: - Flashcard PDF generation (print them out and cut them up)
 	 * 
 	 */
+	
+	final static String DEFAULT_DIR = "C:\\Users\\hsnid\\OneDrive\\Documents\\Coding stuff\\Tinkering\\tinkering\\resources\\Flashcards";
 
 	final static int PILE_COUNT = 6;
 	final static int BASE_PILE_POS = 0;
@@ -33,6 +35,11 @@ public class Flashcards {
 	final static char CARD_DELIMITER = '~'; // TODO make this a string, and user-controlled
 
 	ArrayList<ArrayList<Flashcard>> piles = new ArrayList<>(PILE_COUNT); // B/c can't do array for some stupid reason
+	{
+		for (int i = 1; i < PILE_COUNT; i++) {
+			piles.add(i, new ArrayList<Flashcard>());
+		}
+	}
 	
 	Flashcard currentCard;
 	ArrayList<Flashcard> currentPile;
@@ -50,20 +57,20 @@ public class Flashcards {
 		cardView.setTextAlignment(TextAlignment.CENTER);
 		cardView.setWrapText(true);
 		cardView.setOnMouseClicked(evt -> revealAnswer());
+		
 		pane.setCenter(cardView);
 	}
 
 	FileChooser fileChooser = new FileChooser();
-	Button fileField = new Button("Choose file");
 	{
 		fileChooser.setTitle("Select Flashcards File");
-		fileChooser.setInitialDirectory(new File("C:\\Users\\hsnid\\OneDrive\\Documents\\Coding stuff\\Tinkering\\tinkering\\resources\\Flashcards"));
+		fileChooser.setInitialDirectory(new File(DEFAULT_DIR));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Flashcards", "*.txt"));
-		fileField.setOnAction(evt -> {
-			File file = fileChooser.showOpenDialog(stage);
-			populateCards(file);
-		});
-		pane.setLeft(fileField);
+	}
+	
+	Button openFileButton = new Button("Choose file");
+	{
+		openFileButton.setOnAction(evt -> populateCards(fileChooser.showOpenDialog(stage)));
 	}
 	
 	ArrayList<Label> stackDisplayNums = new ArrayList<>(PILE_COUNT);
@@ -88,33 +95,28 @@ public class Flashcards {
 		Button incorrect = new Button("Incorrect");
 		incorrect.setOnAction(evt -> answered(false));
 
-		HBox buttons = new HBox(NODE_PADDING, incorrect, correct);
-		buttons.setAlignment(Pos.CENTER);
-		pane.setBottom(buttons);
+		HBox cardButtons = new HBox(NODE_PADDING, incorrect, correct);
+		cardButtons.setAlignment(Pos.CENTER);
 		
 		pane.setOnKeyReleased(evt -> keyReleased(evt));
+		pane.setBottom(cardButtons);
 	}
 	
 	public Flashcards(Stage stage) {		
 		this.stage = stage;
-		
-		System.out.println("flashcards created");
-		
+				
 		Label title = new Label("Title");
 		title.getStyleClass().add("title");
 		
-		Button home = new Button("Button");
-		home.setOnAction( evt -> System.out.println("Button"));
-		home.setFocusTraversable(false);
-		
-	    HBox titleBar = new HBox(20, home, title);
+	    HBox titleBar = new HBox(20, title);
 	    titleBar.setAlignment(Pos.CENTER);
 	    
 	    pane.setTop(titleBar);		
+		pane.setLeft(openFileButton);
 	}
 
 	private void keyReleased(KeyEvent evt) {
-		if (fileField.isFocused())
+		if (openFileButton.isFocused())
 			return;
 
 		switch (evt.getCode()) {
@@ -163,24 +165,7 @@ public class Flashcards {
 			Scanner sc = new Scanner(file);
 
 			while (sc.hasNextLine()) {
-				String line = sc.nextLine();
-				String front = "";
-				String back = "";
-				boolean inFront = true;
-
-				for (char c : line.toCharArray()) {
-					if (c == CARD_DELIMITER) { // TODO make CARD_DELIMITER multiple characters
-						inFront = false;
-						continue;
-					}
-
-					if (inFront)
-						front += c;
-					else
-						back += c;
-				}
-
-				currentPile.add(new Flashcard(front, back));
+				currentPile.add(new Flashcard(sc.nextLine()));
 			}
 
 			sc.close();
@@ -188,12 +173,7 @@ public class Flashcards {
 			return;
 		}
 
-		//??
-		for (int i = 1; i < PILE_COUNT; i++) {
-			piles.add(i, new ArrayList<Flashcard>());
-		}
-
-		getNewCard();
+		getNextCard();
 	}
 
 	private void revealAnswer() {
@@ -225,10 +205,10 @@ public class Flashcards {
 			}
 		}
 
-		getNewCard();
+		getNextCard();
 	}
 
-	private void getNewCard() {
+	private void getNextCard() {
 		currentCard = currentPile.get((int) (Math.random() * (currentPile.size() - 1)));
 		cardView.setText(currentCard.front);
 
@@ -240,8 +220,24 @@ public class Flashcards {
 	private class Flashcard {
 		final String front;
 		final String back;
+		
+		public Flashcard(String cardLine) {
+			String front = "";
+			String back = "";
+			boolean inFront = true;
 
-		public Flashcard(String front, String back) {
+			for (char c : cardLine.toCharArray()) {
+				if (c == CARD_DELIMITER) { // TODO make CARD_DELIMITER multiple characters
+					inFront = false;
+					continue;
+				}
+
+				if (inFront)
+					front += c;
+				else
+					back += c;
+			}
+			
 			this.front = front;
 			this.back = back;
 		}
