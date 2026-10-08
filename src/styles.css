@@ -1,0 +1,63 @@
+.title {
+	-fx-font: 50px "Cambria";
+	
+	font: 50px "Cambria";
+}
+
+.subtitle{
+	-fx-font: 30px "Cambria";
+	
+	font: 30px "Cambria";
+}
+
+.button {
+	-fx-font: 15px "Cambria";
+    -fx-padding: 10;
+	-fx-background: white;
+    -fx-stroke: green;
+    -fx-stroke-width: 5;
+    
+   	font: 15px "Cambria";
+    padding: 10;
+    background: white;
+    stroke: green;
+    stroke-width: 5;
+}
+
+.button:hover {
+	-fx-font: 18px "Cambria";
+	
+	font: 25px "Cambria";
+}
+
+.button:pressed {
+	-fx-font: 20px "Cambria";
+	-fx-fill: black;
+	
+	font: 20px "Cambria";
+	fill: black;
+}
+
+.flashcard{
+	-fx-border-color: black;
+	-fx-border-width: 5;
+	-fx-fill: white;
+	-fx-font: 30px "Cambria";
+	
+	border-color: black;
+	border-width: 5;
+	fill: white;
+	font: 30px "Cambria";
+}
+
+.flashcardStackDisplay{
+	-fx-padding: 50 50 50 50;
+	
+	padding: 50 50 50 50;
+}
+
+.flashcardStackDisplayNum {
+	-fx-font: 30px "Cambria";
+	
+	font: 30px "Cambria";
+}
