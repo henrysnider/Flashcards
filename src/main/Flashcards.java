@@ -8,7 +8,6 @@ import java.util.Scanner;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -18,7 +17,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class Flashcards extends BorderPane {
+public class Flashcards {
 	/*
 	 * TODO: - Flashcard PDF generation (print them out and cut them up)
 	 * 
@@ -34,12 +33,14 @@ public class Flashcards extends BorderPane {
 	final static char CARD_DELIMITER = '~'; // TODO make this a string, and user-controlled
 
 	ArrayList<ArrayList<Flashcard>> piles = new ArrayList<>(PILE_COUNT); // B/c can't do array for some stupid reason
-
+	
 	Flashcard currentCard;
 	ArrayList<Flashcard> currentPile;
 	int currentPilePos = BASE_PILE_POS;
 
 	// Frontend stuff
+	Stage stage;
+	public BorderPane pane = new BorderPane();
 	Label cardView = new Label();
 	{
 		cardView.setPrefWidth(FLASHCARD_WIDTH);
@@ -49,10 +50,9 @@ public class Flashcards extends BorderPane {
 		cardView.setTextAlignment(TextAlignment.CENTER);
 		cardView.setWrapText(true);
 		cardView.setOnMouseClicked(evt -> revealAnswer());
-		this.setCenter(cardView);
+		pane.setCenter(cardView);
 	}
 
-	Stage stage;
 	FileChooser fileChooser = new FileChooser();
 	Button fileField = new Button("Choose file");
 	{
@@ -63,7 +63,7 @@ public class Flashcards extends BorderPane {
 			File file = fileChooser.showOpenDialog(stage);
 			populateCards(file);
 		});
-		this.setLeft(fileField);
+		pane.setLeft(fileField);
 	}
 	
 	ArrayList<Label> stackDisplayNums = new ArrayList<>(PILE_COUNT);
@@ -78,7 +78,7 @@ public class Flashcards extends BorderPane {
 
 		stackCounts.setAlignment(Pos.CENTER);
 		stackCounts.getStyleClass().add("flashcardStackDisplay");
-		this.setRight(stackCounts);
+		pane.setRight(stackCounts);
 	}
 
 	{ // Set up card controls
@@ -90,14 +90,12 @@ public class Flashcards extends BorderPane {
 
 		HBox buttons = new HBox(NODE_PADDING, incorrect, correct);
 		buttons.setAlignment(Pos.CENTER);
-		this.setBottom(buttons);
+		pane.setBottom(buttons);
 		
-		this.setOnKeyReleased(evt -> keyReleased(evt));
+		pane.setOnKeyReleased(evt -> keyReleased(evt));
 	}
 	
-	public Flashcards(Stage stage) {
-		super();
-		
+	public Flashcards(Stage stage) {		
 		this.stage = stage;
 		
 		System.out.println("flashcards created");
@@ -112,7 +110,7 @@ public class Flashcards extends BorderPane {
 	    HBox titleBar = new HBox(20, home, title);
 	    titleBar.setAlignment(Pos.CENTER);
 	    
-	    setTop(titleBar);		
+	    pane.setTop(titleBar);		
 	}
 
 	private void keyReleased(KeyEvent evt) {
@@ -159,7 +157,7 @@ public class Flashcards extends BorderPane {
 		currentPile = piles.get(BASE_PILE_POS);
 		currentPilePos = BASE_PILE_POS;
 		
-		this.requestFocus();
+		pane.requestFocus();
 
 		try {
 			Scanner sc = new Scanner(file);
@@ -190,6 +188,7 @@ public class Flashcards extends BorderPane {
 			return;
 		}
 
+		//??
 		for (int i = 1; i < PILE_COUNT; i++) {
 			piles.add(i, new ArrayList<Flashcard>());
 		}
