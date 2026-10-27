@@ -12,7 +12,9 @@ public class Main extends Application {
 	public void start(Stage stage) throws Exception {
 		Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 		
-		Scene scn = new Scene(new Flashcards(stage), screenBounds.getWidth(), screenBounds.getHeight());
+		FlashcardsView view = new FlashcardsView(stage, new FlashcardsModel());
+		
+		Scene scn = new Scene(view.pane, screenBounds.getWidth(), screenBounds.getHeight());
     	scn.getStylesheets().add("styles.css");
 
     	stage.setTitle("Flashcards");
