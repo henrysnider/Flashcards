@@ -56,7 +56,7 @@ public class FlashcardsModel {
 		
 		frontShowing = !frontShowing;
 		
-		return (frontShowing) ? currentCard.back : currentCard.front;
+		return (!frontShowing) ? currentCard.back : currentCard.front;
 	}
 
 	void answered(boolean correct) {
