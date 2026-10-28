@@ -16,7 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class FlashcardsView {
-	final static String DEFAULT_DIR = "C:\\Users\\hsnid\\OneDrive\\Documents\\Coding stuff\\Tinkering\\tinkering\\resources\\Flashcards";
+	final static String DEFAULT_DIR = "C:\\Users\\hsnid\\OneDrive\\Documents\\Education - College Work\\Sophomore Year\\Research Methods";
 
 	final static double FLASHCARD_WIDTH = 700;
 	final static double FLASHCARD_WIDTH_HEIGHT_RATIO = 0.7;
@@ -59,6 +59,7 @@ public class FlashcardsView {
 
 	Button openFileButton = new Button("Choose file");
 	{
+		openFileButton.setFocusTraversable(false);
 		openFileButton.setOnAction(evt -> fileButtonPressed());
 		
 		pane.setLeft(openFileButton);
@@ -94,6 +95,8 @@ public class FlashcardsView {
 	public FlashcardsView(Stage stage, FlashcardsModel flashcardsModel) {
 		this.flModel = flashcardsModel;
 		this.stage = stage;
+		
+		fileButtonPressed();
 	}
 
 	private void fileButtonPressed() {
