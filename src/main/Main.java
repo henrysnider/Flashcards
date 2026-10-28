@@ -19,11 +19,11 @@ public class Main extends Application {
 
     	stage.setTitle("Flashcards");
     	stage.setResizable(true);
-    	stage.setMaximized(false);
+    	stage.setMaximized(true);
     	
 		stage.setScene(scn);		
 		stage.show();
-		
+				
 		System.out.println("Running");
 	}
 
