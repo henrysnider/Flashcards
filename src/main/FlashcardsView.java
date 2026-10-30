@@ -2,9 +2,14 @@ package main;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,8 +21,17 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class FlashcardsView {
-	final static String DEFAULT_DIR = "C:\\Users\\hsnid\\OneDrive\\Documents\\Education - College Work\\Sophomore Year\\Research Methods";
-
+	final static Map<String, String> DIR_NAME_MAP = new HashMap<>();
+	final static ObservableList<String> DIR_NAME_LIST = FXCollections.observableArrayList();
+	static {
+		DIR_NAME_MAP.put("Research Methods", "C:\\Users\\hsnid\\OneDrive\\Documents\\Education - College Work\\Sophomore Year\\Research Methods");
+		DIR_NAME_MAP.put("Software Development", "C:\\Users\\hsnid\\OneDrive\\Documents\\Education - College Work\\Sophomore Year\\cs329");
+						
+		DIR_NAME_MAP.keySet().forEach(str -> {
+			DIR_NAME_LIST.add(str);
+		});		
+	}
+			
 	final static double FLASHCARD_WIDTH = 700;
 	final static double FLASHCARD_WIDTH_HEIGHT_RATIO = 0.7;
 	final static double NODE_PADDING = 20;
@@ -51,18 +65,26 @@ public class FlashcardsView {
 	}
 
 	FileChooser fileChooser = new FileChooser();
-	{
-		fileChooser.setTitle("Select Flashcards File");
-		fileChooser.setInitialDirectory(new File(DEFAULT_DIR));
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Flashcards", "*.txt"));
-	}
-
 	Button openFileButton = new Button("Choose file");
-	{
+	ComboBox<String> directorySelector = new ComboBox<>(DIR_NAME_LIST);
+	{		
+		String defaultDir = DIR_NAME_LIST.get(0);
+		
+		fileChooser.setTitle("Select Flashcards File");
+		fileChooser.setInitialDirectory(new File(DIR_NAME_MAP.get(defaultDir)));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Flashcards", "*.txt"));
+		
+		directorySelector.setValue(defaultDir);
+		directorySelector.setOnAction(evt -> {
+			fileChooser.setInitialDirectory(new File(DIR_NAME_MAP.get(directorySelector.getValue())));
+		});
+		
 		openFileButton.setFocusTraversable(false);
 		openFileButton.setOnAction(evt -> fileButtonPressed());
 		
-		pane.setLeft(openFileButton);
+		VBox FileBox = new VBox(NODE_PADDING, directorySelector, openFileButton);
+		
+		pane.setLeft(FileBox);
 	}
 
 	ArrayList<Label> stackDisplayNums = new ArrayList<>(FlashcardsModel.PILE_COUNT);
