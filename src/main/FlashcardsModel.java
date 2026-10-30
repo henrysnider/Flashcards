@@ -14,8 +14,6 @@ public class FlashcardsModel {
 	final static int PILE_COUNT = 6;
 	final static int BASE_PILE_POS = 0;
 
-	final static char CARD_DELIMITER = '~'; // TODO make this a string, and user-controlled
-
 	ArrayList<ArrayList<Flashcard>> piles = new ArrayList<>(PILE_COUNT + 1); // B/c can't do array for some stupid reason
 	{
 		for (int i = 0; i < PILE_COUNT; i++) {
@@ -96,28 +94,20 @@ public class FlashcardsModel {
 	}
 
 	private class Flashcard {
+		private final static String CARD_DELIMITER = "~";
+
 		final String front;
 		final String back;
 		
 		public Flashcard(String cardLine) {
-			String front = "";
-			String back = "";
-			boolean inFront = true;
-
-			for (char c : cardLine.toCharArray()) {
-				if (c == CARD_DELIMITER) { // TODO make CARD_DELIMITER multiple characters
-					inFront = false;
-					continue;
-				}
-
-				if (inFront)
-					front += c;
-				else
-					back += c;
-			}
+			String[] pieces = cardLine.split(CARD_DELIMITER);
 			
-			this.front = front;
-			this.back = back;
+			front = pieces[0];
+			
+			if (pieces.length > 1)
+				back = pieces[1];
+			else
+				back = "";			
 		}
 	}
 }
