@@ -74,6 +74,7 @@ public class FlashcardsView {
 		fileChooser.setInitialDirectory(new File(DIR_NAME_MAP.get(defaultDir)));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Flashcards", "*.txt"));
 		
+		directorySelector.setFocusTraversable(false);
 		directorySelector.setValue(defaultDir);
 		directorySelector.setOnAction(evt -> {
 			fileChooser.setInitialDirectory(new File(DIR_NAME_MAP.get(directorySelector.getValue())));
@@ -103,9 +104,11 @@ public class FlashcardsView {
 	{ // Set up card controls
 		Button correct = new Button("Correct");
 		correct.setOnAction(evt -> answered(true));
+		correct.setFocusTraversable(false);
 
 		Button incorrect = new Button("Incorrect");
 		incorrect.setOnAction(evt -> answered(false));
+		incorrect.setFocusTraversable(false);
 
 		HBox cardButtons = new HBox(NODE_PADDING, incorrect, correct);
 		cardButtons.setAlignment(Pos.CENTER);
